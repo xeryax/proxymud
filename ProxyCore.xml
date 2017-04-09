@@ -1,0 +1,915 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProxyCore</name>
+    </assembly>
+    <members>
+        <member name="M:ProxyCore.ConfigFile.Load(System.String)">
+            <summary>
+            Load a configuration file.
+            </summary>
+            <param name="fileName">Configuration name - for example "server". This should be your plugin name.</param>
+            <returns></returns>
+        </member>
+        <member name="F:ProxyCore.ConfigFile._loadRegex">
+            <summary>
+            Regex pattern used to load a line from config file.<para></para>
+            Groups[1]: Name of setting<para></para>
+            Groups[3]: Value of setting (including "" if string)
+            </summary>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.SaveNew">
+            <summary>
+            Save a new configuration file with default values. If there is an existing config file, it will be replaced.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.OnCreated">
+            <summary>
+            This will be called to populate config data with default values and descriptions.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.CreateSetting(System.String,System.Object,System.String)">
+            <summary>
+            Create a new setting for the file. If setting with this name already exists then skip.
+            </summary>
+            <param name="Key">Setting name.</param>
+            <param name="Value">Default value for setting. Make sure to use type casting if not integer.</param>
+            <param name="Desc">Description to write in the file for this setting.</param>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.GetInt32(System.String,System.Int32)">
+            <summary>
+            Read a 32 bit integer value from configuration file.
+            </summary>
+            <param name="Key">Name of the option.</param>
+            <param name="Default">Default value if config is missing this option or is invalid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.GetUInt32(System.String,System.UInt32)">
+            <summary>
+            Read a 32 bit unsigned integer value from configuration file.
+            </summary>
+            <param name="Key">Name of the option.</param>
+            <param name="Default">Default value if config is missing this option or is invalid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.GetInt64(System.String,System.Int64)">
+            <summary>
+            Read a 64 bit integer value from configuration file.
+            </summary>
+            <param name="Key">Name of the option.</param>
+            <param name="Default">Default value if config is missing this option or is invalid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.GetUInt64(System.String,System.UInt64)">
+            <summary>
+            Read a 64 bit unsigned integer value from configuration file.
+            </summary>
+            <param name="Key">Name of the option.</param>
+            <param name="Default">Default value if config is missing this option or is invalid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.GetFloat(System.String,System.Single)">
+            <summary>
+            Read a float value from configuration file.
+            </summary>
+            <param name="Key">Name of the option.</param>
+            <param name="Default">Default value if config is missing this option or is invalid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.GetDouble(System.String,System.Double)">
+            <summary>
+            Read a double value from configuration file.
+            </summary>
+            <param name="Key">Name of the option.</param>
+            <param name="Default">Default value if config is missing this option or is invalid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.ConfigFile.GetString(System.String,System.String)">
+            <summary>
+            Read a string value from configuration file.
+            </summary>
+            <param name="Key">Name of the option.</param>
+            <param name="Default">Default value if config is missing this option or is invalid.</param>
+            <returns></returns>
+        </member>
+        <member name="P:ProxyCore.ConfigFile.DidLoad">
+            <summary>
+            Did we successfully load the config file? If not then it was probably missing.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Colors.colorEscape">
+            <summary>
+            This is what we turn the @ into so we can replace colors and keep the symbol intact
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Colors.IsColorCode(System.Char)">
+            <summary>
+            Check if a char code is ANSI color code.
+            </summary>
+            <param name="code">Char to check for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.GetHTMLColors(System.String)">
+            <summary>
+            Convert normal colors to HTML colors. It converts inserting &lt;/font&gt; in front of every color too
+            so you need to have started with some font already.
+            </summary>
+            <param name="Msg">Message to convert colors in.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.GetLastColorCode(System.String)">
+            <summary>
+            Get last color code in the string (not including foreground colors). This will return
+            with the @ sign.
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.RemoveDuplicateColors(System.String)">
+            <summary>
+            Removes duplicate colors from a string. For example "@r @Y bla@w" would become "  @Ybla".
+            Also XTERM color codes become padded with zero if they are present.
+            </summary>
+            <param name="orig">String to fix colors in.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.FixColors(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            This function will turn either ANSI color to our format or vice versa.
+            </summary>
+            <param name="text">String passed for color changing.</param>
+            <param name="fromRaw">False means we change our format (@x) to ANSI; true means we change ANSI to our format (we don't convert XTERM colors this way though).</param>
+            <param name="allowXTerm">Allow replacing xterm colors? If disabled we will replace into closest ANSI.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.RemoveGray(System.String)">
+            <summary>
+            Remove dark grey color code from string and replace it with normal grey.
+            </summary>
+            <param name="text">String to remove dark grey from (replacing it with normal grey).</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.RemoveColors(System.String,System.Boolean)">
+            <summary>
+            This function will Remove all color from the string.
+            </summary>
+            <param name="text">String where the color is being removed.</param>
+            <param name="raw">True means raw color (ansi); false means our format (@x).</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.GetXTerm(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Get XTerm color code from text in index (index must be at @x or @z, before it).
+            </summary>
+            <param name="text">Text to get color code from.</param>
+            <param name="index">Index of @z or @x.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.GetEscape(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Get full escape string from string in index.
+            </summary>
+            <param name="text">Text to search from.</param>
+            <param name="index">Index in text of @e</param>
+            <param name="xlen">Length of the thing behind @e.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.GetXTermCode(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Get XTerm color code from text in index (index must be at the number not before @x or @z like the other function)
+            </summary>
+            <param name="text">Text to get color code from.</param>
+            <param name="index">Index of number.</param>
+            <param name="xlen">Length of the number.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.ReplaceXTerm(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Replace XTerm color codes into real XTerm or ANSI values.
+            </summary>
+            <param name="text">Text to search in.</param>
+            <param name="allowXTerm">Replace into XTerm codes or if false then convert to closest regular ANSI.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProxyCore.Colors.XTermToANSI(System.Byte)">
+            <summary>
+            Convert XTerm to ansi char (closest match).
+            </summary>
+            <param name="code">Code to convert.</param>
+            <returns></returns>
+        </member>
+        <member name="F:ProxyCore.Scripting.Plugin.Name">
+            <summary>
+            Name of your plugin. You must set this or your plugin will not be loaded.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Scripting.Plugin.Keyword">
+            <summary>
+            This is the keyword for your plugin. You must set this or your plugin will not be loaded.
+            This must be unique. If two or more plugins with the same keyword are found then the plugin
+            with the highest version number is loaded.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterTrigger(System.String,System.String,ProxyCore.Output.TriggerFunction)">
+            <summary>
+            Register a new trigger.
+            </summary>
+            <param name="Name">Unique identifier for the trigger.</param>
+            <param name="Pattern">Regex pattern for the trigger.</param>
+            <param name="Function">Function that will be called if this trigger fires.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterTrigger(System.String,System.String,ProxyCore.Output.TriggerFunction,ProxyCore.Output.TriggerFlags)">
+            <summary>
+            Register a new trigger.
+            </summary>
+            <param name="Name">Unique identifier for the trigger.</param>
+            <param name="Pattern">Regex pattern for the trigger.</param>
+            <param name="Function">Function that will be called if this trigger fires.</param>
+            <param name="Flags">Options for the trigger.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterTrigger(System.String,System.String,ProxyCore.Output.TriggerFunction,ProxyCore.Output.TriggerFlags,System.Int32)">
+            <summary>
+            Register a new trigger.
+            </summary>
+            <param name="Name">Unique identifier for the trigger.</param>
+            <param name="Pattern">Regex pattern for the trigger.</param>
+            <param name="Function">Function that will be called if this trigger fires.</param>
+            <param name="Flags">Options for the trigger.</param>
+            <param name="Priority">Lower priority triggers get matched first.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterTrigger(System.String,System.String,ProxyCore.Output.TriggerFunction,ProxyCore.Output.TriggerFlags,System.Int32,System.Int32)">
+            <summary>
+            Register a new trigger.
+            </summary>
+            <param name="Name">Unique identifier for the trigger.</param>
+            <param name="Pattern">Regex pattern for the trigger.</param>
+            <param name="Function">Function that will be called if this trigger fires.</param>
+            <param name="Flags">Options for the trigger.</param>
+            <param name="Priority">Lower priority triggers get matched first.</param>
+            <param name="Arg">Custom argument that will be passed to trigger data.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.UnregisterTrigger(System.String)">
+            <summary>
+            Unregister a trigger by name.
+            </summary>
+            <param name="Name">Name of the trigger you wish to unregister.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,System.Int32)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="MinLength">Minimum length of command typed required to activate. For example if command is "plugins" and this is 6 then "plugin" and "plugins" both activate this command but "plugi" won't. Enter 0 to disable this behaviour.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,System.Int32,ProxyCore.Input.CMDFlags)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="MinLength">Minimum length of command typed required to activate. For example if command is "plugins" and this is 6 then "plugin" and "plugins" both activate this command but "plugi" won't. Enter 0 to disable this behaviour.</param>
+            <param name="flags">Options for command.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,System.Int32,ProxyCore.Input.CMDFlags,System.String)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="MinLength">Minimum length of command typed required to activate. For example if command is "plugins" and this is 6 then "plugin" and "plugins" both activate this command but "plugi" won't. Enter 0 to disable this behaviour.</param>
+            <param name="flags">Options for command.</param>
+            <param name="parent">Parent command (if you want to create a subcommand). You can enter commands separated with space if it's nested.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,System.Int32,ProxyCore.Input.CMDFlags,System.String,System.Int32)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="MinLength">Minimum length of command typed required to activate. For example if command is "plugins" and this is 6 then "plugin" and "plugins" both activate this command but "plugi" won't. Enter 0 to disable this behaviour.</param>
+            <param name="flags">Options for command.</param>
+            <param name="parent">Parent command (if you want to create a subcommand). You can enter commands separated with space if it's nested.</param>
+            <param name="Arg">Custom argument to pass to function handler. This way you can register multiple commands to a same
+            function handler only differentiating them with this custom argument.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,System.Int32,ProxyCore.Input.CMDFlags,System.String,System.Int32,System.UInt64)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="flags">Options for command.</param>
+            <param name="parent">Parent command (if you want to create a subcommand). You can enter commands separated with space if it's nested.</param>
+            <param name="Arg">Custom argument to pass to function handler. This way you can register multiple commands to a same
+            function handler only differentiating them with this custom argument.</param>
+            <param name="AuthMask">Mask of allowed auth levels to access this command. Default ulong.MaxValue (meaning all auth levels are allowed).
+            Enter 3 for example to allow only auth level 1 and 2 to access this command.</param>
+            <param name="MinLength">Minimum length of command typed required to activate. For example if command is "plugins" and this is 6 then "plugin" and "plugins" both activate this command but "plugi" won't. Enter 0 to disable this behaviour.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.UnregisterCommand(System.String)">
+            <summary>
+            Unregister a command.
+            </summary>
+            <param name="Cmd">Command to unregister. If you want to unregister a nested command
+            separate commands with a space.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.OnLogin">
+            <summary>
+            This will be called when character enters the game. Either by log in or reconnect.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.OnDisconnect">
+            <summary>
+            This will be called when we disconnect from Aardwolf.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.OnConnect">
+            <summary>
+            This will be called when we connect to Aardwolf.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.Shutdown">
+            <summary>
+            This is called when program shuts down. Write any code you need to shut down your plugin.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.Update(System.Int64)">
+            <summary>
+            This is called on every loop of world update. You can use it as your main loop for
+            the plugin if you need one.
+            </summary>
+            <param name="msTime">Current time since program startup.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.OnReceivedLineAfter(ProxyCore.Messages.Message)">
+            <summary>
+            This is called when we receive a line from MUD. It is called AFTER triggers are done with it. If
+            a trigger gagged the line this will not be called.
+            </summary>
+            <param name="Msg"></param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.OnReceivedLineBefore(ProxyCore.Messages.Message)">
+            <summary>
+            This is called when we receive a line from MUD. It is called BEFORE triggers are done with it.
+            </summary>
+            <param name="Msg"></param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.OnEnteredCommandAfter(System.String@,System.UInt32,System.Int32)">
+            <summary>
+            This is called when user enters a command and inputhandler did not handle the command. So it
+            is called AFTER we check for aliases and commands and we are about to send command to MUD.
+            </summary>
+            <param name="Msg">Command that was entered. You can change this in the function. If you set null
+            then nothing will be sent to MUD.</param>
+            <param name="ClientId">Client who entered the command. If this is 0 it was executed from a plugin.</param>
+            <param name="AuthLevel">Auth level of who entered the command.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.OnEnteredCommandBefore(System.String@,System.UInt32,System.Int32)">
+            <summary>
+            This is called when user enters a command. It is called BEFORE we check for aliases and commands.
+            </summary>
+            <param name="Msg">Command that was entered. You can change this in the function. If you set null
+            then nothing will be sent to MUD and nothing will be checked for aliases or commands.</param>
+            <param name="ClientId">Client who entered the command. If this is 0 it was executed from a plugin.</param>
+            <param name="AuthLevel">Auth level of who entered the command.</param>
+        </member>
+        <member name="F:ProxyCore.Scripting.Plugin.RequiredPlayerConfig">
+            <summary>
+            Enter required player config options here. This will be displayed if user requests info about a plugin.
+            For example you may enter here "echocommands ON" and "statmon ON" etc. Whatever your plugin requires.
+            This doesn't actually change the settings in game it is only for plugin info command.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Scripting.Plugin.ClassName">
+            <summary>
+            This is the class name of script. For example moons has this set to "MoonScript.MoonScript".
+            Only needed by developers who want to use another plugin in their plugin.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.OnLoadedConfig(System.Boolean)">
+            <summary>
+            Called when we load a configuration file.
+            </summary>
+            <param name="Success">Did the loading succeed? If not then the config file wasn't present and we created a new one.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.DisableTriggers(System.Int32)">
+            <summary>
+            Disable all triggers with this priority. Disabling triggers from a plugin will make them not work until
+            you enable them from the same plugin again. If triggers have been disabled from multiple plugins then
+            all plugins will have to enable them again until they start working. Disabling triggers will make all
+            triggers with this priority to not work not only triggers in current plugin!
+            </summary>
+            <param name="Priority">Priority of triggers to disable.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.DisableTriggers(System.Int32,System.Int32)">
+            <summary>
+            Disable all triggers with this priority. Disabling triggers from a plugin will make them not work until
+            you enable them from the same plugin again. If triggers have been disabled from multiple plugins then
+            all plugins will have to enable them again until they start working. Disabling triggers will make all
+            triggers with this priority to not work not only triggers in current plugin!
+            </summary>
+            <param name="MinPriority">Minimum priority of triggers to disable.</param>
+            <param name="MaxPriority">Maximum priority of triggers to disable.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.EnableTriggers(System.Int32)">
+            <summary>
+            Enable all previously disabled triggers with this priority.
+            </summary>
+            <param name="Priority">Priority of triggers to enable.</param>
+        </member>
+        <member name="M:ProxyCore.Scripting.Plugin.EnableTriggers(System.Int32,System.Int32)">
+            <summary>
+            Enable all previously disabled triggers with this priority.
+            </summary>
+            <param name="MinPriority">Minimum priority of triggers to enable.</param>
+            <param name="MaxPriority">Maximum priority of triggers to enable.</param>
+        </member>
+        <member name="P:ProxyCore.Scripting.Plugin.Config">
+            <summary>
+            Set this to be your configuration file if you want your plugin to have one. This is optional.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Scripting.Plugin.Author">
+            <summary>
+            Creator of the plugin, this is your name / character's name. This is optional.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Scripting.Plugin.Version">
+            <summary>
+            Version of your plugin. This is optional.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Scripting.Plugin.Description">
+            <summary>
+            Description about your plugin. You should explain here what it does and how to handle it.
+            This will be displayed if user requests information about your plugin. This is optional.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Scripting.Plugin.Website">
+            <summary>
+            Enter a website for this plugin if you wish. Mostly used to see documentation and updates.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Scripting.Plugin.UpdateUrl">
+            <summary>
+            Enter the URL for update checking txt file. For example "www.duckbat.com/plugins/update.moons.txt".
+            In the text file enter the number of last version. For example whole contents of the txt file can be "3".
+            Indicating that the last version for this plugin is 3. If version is greater than user's version and
+            they have update checking on then they will be notified that there is a more up to date version out there.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Scripting.Plugin.RequiredCoreVersion">
+            <summary>
+            Does this plugin require a certain version of core? Set this if there was an update and your plugin requires it.
+            Plugin is not loaded if an older version core than this is used and user will be notified.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.World.Version">
+            <summary>
+            Version of Proxy.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.World._OnReceived(System.String)">
+            <summary>
+            Handle text line as if we received it from Aardwolf.
+            </summary>
+            <param name="Msg"></param>
+        </member>
+        <member name="M:ProxyCore.World._OnReceived(System.Byte[])">
+            <summary>
+            Handle GMCP data that we received from Aardwolf.
+            </summary>
+            <param name="Data">GMCP data received.</param>
+        </member>
+        <member name="M:ProxyCore.World.Shutdown">
+            <summary>
+            This is called from proxy when it shuts down. Do NOT call from a plugin.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.World._OnSent(System.String,System.UInt32,System.Int32)">
+            <summary>
+            Enter input as if a client entered it. Meaning we parse it. Consider using the Execute command instead.
+            </summary>
+            <param name="Msg">Input entered.</param>
+            <param name="ClientId">Which client is this from? Enter 0 to set not from a client.</param>
+            <param name="AuthLevel">Authlevel of client who entered command (1...64)</param>
+        </member>
+        <member name="M:ProxyCore.World.SendMessage(System.String,System.UInt32[])">
+            <summary>
+            Send message to specified clients.
+            </summary>
+            <param name="Msg">Message to send.</param>
+            <param name="Clients">Clients to send it to. Enter null to send to all connected clients.
+            Enter 0 as client to send it as a command to Aardwolf (we don't parse it though, if you want
+            parsed input use the Execute command).</param>
+        </member>
+        <member name="M:ProxyCore.World.SendMessage(System.String)">
+            <summary>
+            Send a message to all connected authorized clients.
+            </summary>
+            <param name="Msg">Message to send to all authorized clients.</param>
+        </member>
+        <member name="M:ProxyCore.World.SendMessage(System.String,System.UInt64)">
+            <summary>
+            Send a message to all connected authorized clients.
+            </summary>
+            <param name="Msg">Message to send to all authorized clients.</param>
+            <param name="AuthMask">Authorization levels required to see this message. This is a mask.</param>
+        </member>
+        <member name="M:ProxyCore.World.Execute(System.String,System.Boolean)">
+            <summary>
+            Execute a command.
+            </summary>
+            <param name="Msg">Command to execute.</param>
+            <param name="allowParse">Allow parsing it for aliases and such, or send it directly to Aardwolf?</param>
+        </member>
+        <member name="M:ProxyCore.World.Execute(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Execute a command.
+            </summary>
+            <param name="Msg">Command to execute.</param>
+            <param name="allowParse">Allow parsing it for aliases and such, or send it directly to Aardwolf?</param>
+            <param name="AuthLevel">Auth level that executes this command. (1...64)</param>
+        </member>
+        <member name="M:ProxyCore.World.Send(System.Byte[])">
+            <summary>
+            Send raw bytes to MUD.
+            </summary>
+            <param name="Data">Bytes to send.</param>
+        </member>
+        <member name="M:ProxyCore.World.Update(System.Int64)">
+            <summary>
+            Internal command for updating the world. DO NOT CALL FROM A PLUGIN!
+            </summary>
+            <param name="msTime">New mstime.</param>
+        </member>
+        <member name="F:ProxyCore.World._MessageData">
+            <summary>
+            This is messages for networking to handle. Don't touch unless you know what you are doing.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.World.CheckUpdates(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Check for updates and report to all connected users if there are any.
+            </summary>
+            <param name="Core">Check core update.</param>
+            <param name="Plugins">Check plugin updates.</param>
+            <param name="ReportNoUpdates">Should we report if no updates were found?</param>
+        </member>
+        <member name="P:ProxyCore.World.Instance">
+            <summary>
+            Game world instance.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.World.MSTime">
+            <summary>
+            Milliseconds since program startup.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Scripting.PluginMgr.GetPlugin(System.String)">
+            <summary>
+            Get plugin by keyword.
+            </summary>
+            <param name="Keyword">Keyword of plugin.</param>
+            <returns></returns>
+        </member>
+        <member name="F:ProxyCore.Output.TriggerData.Msg">
+            <summary>
+            What we triggered on, you can change this value to replace the text.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Output.TriggerData.Arg">
+            <summary>
+            Custom argument if you registered a trigger to have one.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Output.TriggerData.Replace(System.String,System.Boolean)">
+            <summary>
+            Replace matched %0 value with new string. This only works in regex triggers. You can have {%1} - {%n} in the new string for matched data.
+            Use {%%1} to escape. If you use % higher than what was captured then a NULL will be replaced there.
+            For example using %3 when there are only 2 things captured with regex.<para></para>
+            <para></para>
+            Example:<para></para>
+            Line: "@mQuest Points      @w:         @Y19,361"<para></para>
+            Pattern: "^@mQuest Points      @w: (\s*)@Y([\d,]+)$"<para></para>
+            Replace: "@mQuest Points      @w: {%1}@G{%2}"<para></para>
+            This would make quest points green in the "worth" command output. Where {%1} inserts the right amount
+            of spaces (what was captured) and {%2} inserts the quest points amount (19,361).
+            </summary>
+            <param name="New">New string to replace with. See function summary for help with this.</param>
+            <param name="AllowParse">Allow parsing {%n} in the New string or not. If not then string
+            is replaced as is without parsing for arguments.</param>
+        </member>
+        <member name="P:ProxyCore.Output.TriggerData.Match">
+            <summary>
+            Match data.
+            </summary>
+        </member>
+        <member name="T:ProxyCore.Output.TriggerFunction">
+            <summary>
+            This is the function template that will be called when a trigger fires. Return true to gag it - this
+            will also prevent other triggers from triggering on this line.
+            </summary>
+            <param name="Data">Triggered text data.</param>
+            <returns></returns>
+        </member>
+        <member name="F:ProxyCore.Output.TriggerFlags.Repeat">
+            <summary>
+            Normal triggers stop after finding the first match in a line,
+            with this flag the trigger repeats for each match in the same line.
+            This only applies if you use regex pattern.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Output.TriggerFlags.CaseInsensitive">
+            <summary>
+            Ignore lower and upper case. This only applies if you use regex pattern.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Output.TriggerFlags.NotRegex">
+            <summary>
+            Pattern is not regex but instead just raw string. For example if you want
+            to trigger on "@w--&gt; @WTICK @w&lt;--" there's no need to create a regex pattern
+            just insert this string and set this flag in options and the trigger will be MUCH
+            faster. Use regex only where necessary.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Output.TriggerFlags.NonAnsi">
+            <summary>
+            Trigger ignores color codes. If you set this flag you should NOT include any color codes
+            in your trigger pattern.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Output.TriggerFlags.RightToLeft">
+            <summary>
+            Matching will start from right and go to left.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Output.TriggerHandler.RegisterTrigger(System.String,System.String,ProxyCore.Output.TriggerFunction)">
+            <summary>
+            Register a new trigger.
+            </summary>
+            <param name="Name">Unique identifier for the trigger.</param>
+            <param name="Pattern">Regex pattern for the trigger.</param>
+            <param name="Function">Function that will be called if this trigger fires.</param>
+        </member>
+        <member name="M:ProxyCore.Output.TriggerHandler.RegisterTrigger(System.String,System.String,ProxyCore.Output.TriggerFunction,ProxyCore.Output.TriggerFlags)">
+            <summary>
+            Register a new trigger.
+            </summary>
+            <param name="Name">Unique identifier for the trigger.</param>
+            <param name="Pattern">Regex pattern for the trigger.</param>
+            <param name="Function">Function that will be called if this trigger fires.</param>
+            <param name="Flags">Options for the trigger.</param>
+        </member>
+        <member name="M:ProxyCore.Output.TriggerHandler.RegisterTrigger(System.String,System.String,ProxyCore.Output.TriggerFunction,ProxyCore.Output.TriggerFlags,System.Int32)">
+            <summary>
+            Register a new trigger.
+            </summary>
+            <param name="Name">Unique identifier for the trigger.</param>
+            <param name="Pattern">Regex pattern for the trigger.</param>
+            <param name="Function">Function that will be called if this trigger fires.</param>
+            <param name="Flags">Options for the trigger.</param>
+            <param name="Priority">Lower priority triggers get matched first. Default: 1000</param>
+        </member>
+        <member name="M:ProxyCore.Output.TriggerHandler.RegisterTrigger(System.String,System.String,ProxyCore.Output.TriggerFunction,ProxyCore.Output.TriggerFlags,System.Int32,System.Int32,System.String)">
+            <summary>
+            Register a new trigger.
+            </summary>
+            <param name="Name">Unique identifier for the trigger.</param>
+            <param name="Pattern">Regex pattern for the trigger.</param>
+            <param name="Function">Function that will be called if this trigger fires.</param>
+            <param name="Flags">Options for the trigger.</param>
+            <param name="Priority">Lower priority triggers get matched first. Default: 1000</param>
+            <param name="Arg">Custom argument to pass to trigger data.</param>
+            <param name="Plugin">From which plugin was this registered.</param>
+        </member>
+        <member name="M:ProxyCore.Output.TriggerHandler.UnregisterTrigger(System.String)">
+            <summary>
+            Unregister a trigger by name.
+            </summary>
+            <param name="Name">Name of the trigger you wish to unregister.</param>
+        </member>
+        <member name="T:ProxyCore.Input.CmdFunction">
+            <summary>
+            Function for handling input. Return true if we handled the command (no need to send to MUD) and false
+            if we didn't and we must send it to MUD.
+            </summary>
+            <param name="cmd">Input data.</param>
+            <returns></returns>
+        </member>
+        <member name="F:ProxyCore.Input.CMDFlags.Hidden">
+            <summary>
+            Hidden from normal commands menu.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Input.CMDFlags.Disabled">
+            <summary>
+            Command is currently disabled and will be excluded in the list of valid commands.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Input.CMDFlags.Dummy">
+            <summary>
+            Dummy command, player can't type it but it will be redirected from elsewhere.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Input.CMDFlags.IsParent">
+            <summary>
+            Internal - this will be assigned automatically for commands that have subcommands.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.Message.MsgData">
+            <summary>
+            If this is set ignore message and send this byte data instead. Color codes
+            will not be parsed by server and this is sent as is.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.Message.MsgNoColor">
+            <summary>
+            This is message but without colors. Used for triggering non-ansi triggers.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.Message.AuthMask">
+            <summary>
+            Which clients should receive the message. This is a mask for security levels.
+            For example value "3" would only send this message to security level 1 and 2.
+            Set ulong.MaxValue (default) to send to all clients or 0 to send to noone.
+            This field is ignored when sending message to Aardwolf (as a command).
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.Message.Clients">
+            <summary>
+            This setting is used to send the message to specific clients (using client ID).
+            Enter new uint[] { 0 } to send to Aardwolf and null to send to all clients (default).
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.Message.IsNaturalMessage">
+            <summary>
+            Is this message natural (client entered command or Aardwolf sent message) or
+            is it generated by us, meaning Aardwolf did not send this and client did not enter
+            it as a command.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.Message.LineEnding">
+            <summary>
+            What kind of line ending do we send with this message (default \n\r).
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.Message.Timestamp">
+            <summary>
+            When was message generated (send time may vary by some milliseconds)
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.Message.Flags">
+            <summary>
+            Options for message.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Messages.Message.Msg">
+            <summary>
+            Contents of the message.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Messages.MessageFlags.GMCP">
+            <summary>
+            This is a GMCP message the main module will be in Msg and the data will be in MsgData.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Input.InputHandler.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+        </member>
+        <member name="M:ProxyCore.Input.InputHandler.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,ProxyCore.Input.CMDFlags)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="flags">Options for command.</param>
+        </member>
+        <member name="M:ProxyCore.Input.InputHandler.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,ProxyCore.Input.CMDFlags,System.String)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="flags">Options for command.</param>
+            <param name="parent">Parent command (if you want to create a subcommand). You can enter commands separated with space if it's nested.</param>
+        </member>
+        <member name="M:ProxyCore.Input.InputHandler.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,ProxyCore.Input.CMDFlags,System.String,System.Int32)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="flags">Options for command.</param>
+            <param name="parent">Parent command (if you want to create a subcommand). You can enter commands separated with space if it's nested.</param>
+            <param name="Arg">Custom argument to pass to function handler. This way you can register multiple commands to a same
+            function handler only differentiating them with this custom argument.</param>
+        </member>
+        <member name="M:ProxyCore.Input.InputHandler.RegisterCommand(System.String,System.String,ProxyCore.Input.CmdFunction,ProxyCore.Input.CMDFlags,System.String,System.Int32,System.UInt64,System.String,System.Int32)">
+            <summary>
+            Register a new command or overwrite a previous one.
+            </summary>
+            <param name="Cmd">Command to register.</param>
+            <param name="Args">Arguments to match (regex pattern). This can be set to null or empty string
+            if you don't want to capture anything or plan to do so in the function yourself.</param>
+            <param name="f">Function of command.</param>
+            <param name="flags">Options for command.</param>
+            <param name="parent">Parent command (if you want to create a subcommand). You can enter commands separated with space if it's nested.</param>
+            <param name="Arg">Custom argument to pass to function handler. This way you can register multiple commands to a same
+            function handler only differentiating them with this custom argument.</param>
+            <param name="AuthMask">Mask of allowed auth levels to access this command. Default ulong.MaxValue (meaning all auth levels are allowed).
+            Enter 3 for example to allow only auth level 1 and 2 to access this command.</param>
+            <param name="Plugin">From which plugin did this come.</param>
+            <param name="ReqMinLength">Minimum length of command typed required to activate. For example if command is "plugins" and this is 6 then "plugin" and "plugins" both activate this command but "plugi" won't.</param>
+        </member>
+        <member name="M:ProxyCore.Input.InputHandler.UnregisterCommand(System.String)">
+            <summary>
+            Unregister a command.
+            </summary>
+            <param name="Cmd">Command to unregister. If you want to unregister a nested command
+            separate commands with a space.</param>
+        </member>
+        <member name="F:ProxyCore.Input.InputData.Command">
+            <summary>
+            Whole command just as it was entered. You can change this to send something different to MUD. Just make
+            sure you return false on the command handler otherwise nothing will get sent to MUD.
+            </summary>
+        </member>
+        <member name="F:ProxyCore.Input.InputData.Function">
+            <summary>
+            Which function will we execute with this data.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Input.InputData.ClientId">
+            <summary>
+            Who executed the command? This will be uint.MaxValue if we execute it from a plugin or other places - meaning
+            it didn't originate from a client.
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Input.InputData.ClientMask">
+            <summary>
+            Use this if you want to send message to whoever executed the command. If it was executed from a plugin
+            send message to every client. Example: World.Instance.SendMessage("Test.", i.ClientMask);
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Input.InputData.ClientAuthLevel">
+            <summary>
+            The auth level of client who entered command. (1...64)
+            </summary>
+        </member>
+        <member name="P:ProxyCore.Input.InputData.Arguments">
+            <summary>
+            This is where we capture arguments if the arguments pattern was set. Check first if Arguments.Success, otherwise there will be no Groups set.
+            </summary>
+        </member>
+        <member name="M:ProxyCore.Log.Write(System.String)">
+            <summary>
+            Write this into console window.
+            </summary>
+            <param name="msg">Message to write to console window.</param>
+        </member>
+        <member name="M:ProxyCore.Log.Error(System.String)">
+            <summary>
+            Write an error message to console window and error.log
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:ProxyCore.Log.Crash(System.Exception,System.String)">
+            <summary>
+            Write a stacktrace when program crashes.
+            </summary>
+            <param name="StackTrace">Trace to write.</param>
+        </member>
+    </members>
+</doc>

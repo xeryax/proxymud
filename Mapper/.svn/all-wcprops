@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 29
+/svn/!svn/ver/57/trunk/Mapper
+END
+Edit.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/56/trunk/Mapper/Edit.cs
+END
+Area.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/30/trunk/Mapper/Area.cs
+END
+Exit.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/56/trunk/Mapper/Exit.cs
+END
+Room.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/56/trunk/Mapper/Room.cs
+END
+Pathfind.cs
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/53/trunk/Mapper/Pathfind.cs
+END
+Mapper.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/44/trunk/Mapper/Mapper.csproj
+END
+Mapper.cs
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/57/trunk/Mapper/Mapper.cs
+END

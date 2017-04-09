@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/svn/!svn/ver/58/trunk/MySQL
+END
+MySQL.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/58/trunk/MySQL/MySQL.csproj
+END
+MySql.Data.dll
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/58/trunk/MySQL/MySql.Data.dll
+END
+MySQL.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/58/trunk/MySQL/MySQL.cs
+END
+MySql.Data.Entity.dll
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/58/trunk/MySQL/MySql.Data.Entity.dll
+END
