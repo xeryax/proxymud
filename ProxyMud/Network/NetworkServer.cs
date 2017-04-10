@@ -220,8 +220,9 @@ namespace ProxyMud.Network
 //The problem is between here and next comment -- or at least this is what controls the GMCP shit that gets sent to the client.
                     if((m.Flags & MessageFlags.GMCP) != MessageFlags.None)
                     {
-                        if(!Clients[i].HasGMCPModule(m.Msg.ToLower()))
-                            continue;
+//the following line is the problem... looks like my client isnt registering "hasGMCPModule"
+                     //   if(!Clients[i].HasGMCPModule(m.Msg.ToLower()))
+                     //       continue;
 
                         if(m.MsgData == null || m.MsgData.Length == 0)
                             continue;
@@ -243,7 +244,7 @@ namespace ProxyMud.Network
                         byte[] data = Encoding.Default.GetBytes(msg + m.LineEnding);
                         strMessage.Write(data, 0, data.Length);
                     }
-//BLAH
+//BLAH*/
                 }
 
                 if(strMessage.Length == 0)
