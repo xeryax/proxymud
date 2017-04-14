@@ -74,6 +74,7 @@ namespace MudLog
                 f.WriteLine(
                     string.Format("[" + "{0:D2}" + ":" + "{1:D2}" + ":" + "{2:D2}" + "] ", DateTime.Now.Hour,
                                   DateTime.Now.Minute, DateTime.Now.Second) + m);
+                //$gmcp.comm.channel.msg Floki MUSIC:  -- Floki = Player MUSIC = channel
             }
         }
 
